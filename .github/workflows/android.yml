@@ -1,0 +1,35 @@
+name: Build Bakr Scanner APK
+
+on: 
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v3
+
+    - name: Obtenir la mise en cache de Buildozer
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.ccache
+          .buildozer
+        key: ${{ runner.os }}-buildozer-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildozer-
+
+    - name: Compilation de l'APK avec Buildozer
+      uses: ArtemSsh/buildozer-action@v1
+      with:
+        workdir: .
+        buildozer_version: stable
+
+    - name: Télécharger l'APK généré
+      uses: actions/upload-artifact@v3
+      with:
+        name: Bakr-Scanner-APK
+        path: bin/*.apk
