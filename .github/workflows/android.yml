@@ -27,12 +27,10 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
-    - name: Pré-génération du SDK et acceptation des licences
-      run: |
-        buildozer android debug || true
-        if [ -d "$HOME/.buildozer/android/platform/android-sdk" ]; then
-          yes | $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
-        fi
+    - name: Installation du SDK Android et validation des licences
+      uses: android-actions/setup-android@v3
+      with:
+        log-accepted-licenses: false
 
     - name: Compilation finale de l'APK
       run: |
